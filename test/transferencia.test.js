@@ -1,21 +1,12 @@
 const request = require('supertest');
 const {expect} = require('chai');
 require('dotenv').config({ override: true });
+const { obterToken } = require('../helpers/autenticacao');
 
 describe('Transferencia Tests', () => {
     describe('POST /transferencias', () => {
         it('Deve retornar 201 com mensagem de sucesso quando o valor da transferência for igual ou acima de R$ 10,00', async() => {
-            
-            // captura do token de autenticação
-            const responseLogin = await request(process.env.BASE_URL)
-                .post('/login')
-                .set('Content-Type', 'application/json')
-                .send({
-                    'username': process.env.USERNAME,
-                    'senha': process.env.PASSWORD
-                })
-
-            const token = responseLogin.body.token;
+            const token = await obterToken(process.env.USERNAME, process.env.PASSWORD);
 
             const responseTransf = await request(process.env.BASE_URL)
                 .post('/transferencias')
@@ -33,15 +24,7 @@ describe('Transferencia Tests', () => {
         it('Deve retornar falha com 422 quando o valor da transferência for abaixo de R$ 10,00', async() => {
 
             // captura do token de autenticação
-            const responseLogin = await request(process.env.BASE_URL)
-                .post('/login')
-                .set('Content-Type', 'application/json')
-                .send({
-                    'username': process.env.USERNAME,
-                    'senha': process.env.PASSWORD
-                })
-
-            const token = responseLogin.body.token;
+            const token = await obterToken(process.env.USERNAME, process.env.PASSWORD);
 
             const responseTransf = await request(process.env.BASE_URL)
                 .post('/transferencias')
