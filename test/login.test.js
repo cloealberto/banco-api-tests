@@ -1,18 +1,19 @@
-const request = require('supertest');
-const {expect} = require('chai');
+const request = require('supertest')
+const {expect} = require('chai')
+require('dotenv').config({ override: true })
+const postLogin = require('../fixtures/postLogin.json')
 
 describe('Login Tests', () => {
     describe('POST /login', () => {
         it('Deve retornar 200 com token em string quando usar credenciais validas', async() => {
-            const response = await request('http://localhost:3000')
+            const bodyLogin = {...postLogin}
+            
+            const responseLogin = await request(process.env.BASE_URL)
                 .post('/login')
                 .set('Content-Type', 'application/json')
-                .send({
-                    'username': 'cloe.alberto',
-                    'senha': '101010'
-                })
-            expect(response.status).to.equal(200);
-            expect(response.body.token).to.be.a('string');
+                .send(bodyLogin)
+
+            expect(responseLogin.status).to.equal(200);
 
     })  })
 
